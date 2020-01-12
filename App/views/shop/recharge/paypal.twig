@@ -1,0 +1,149 @@
+{% extends "default.twig" %}
+{% set description = "Recharge ton compte sur BadBlock très simplement avec le service PayPal pour payer par carte bancaire ou solde PayPal pour pouvoir profiter des nouvelles opportunités sur BadBlock." %}
+{% set active_page = "shop" %}
+{% set show_title = false %}
+{% set title = 'shop.title'|trans %}
+
+{% block cover %}
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Recharger -->
+
+    <div class="cover-back">
+        <div class="cover cover-profile">
+            <div class="container">
+                <div class="row d-align">
+                    <div class="col-12 col-md-8">
+                        <div class="recharge-info">
+                            <img src="https://cdn.badblock.fr/boutique/paypal.png" alt="PayPal" title="PayPal">
+                            <img src="https://cdn.badblock.fr/boutique/smsplus.png" alt="SMS" title="SMS">
+                            <img src="https://cdn.badblock.fr/boutique/paysafe.png" title="PaySafecard" alt="PaySafecard">
+                            <img src="https://cdn.badblock.fr/boutique/mastercard%20logo.png" title="Carte bancaire"
+                                 alt="Carte bancaire">
+                            <img src="https://cdn.badblock.fr/boutique/cb%20logo.png" title="Carte bancaire"
+                                 alt="Carte bancaire">
+                            <img src="https://cdn.badblock.fr/boutique/visa%20logo.png" title="Visa" alt="Visa">
+                        </div>
+                    </div>
+                    <a class="button button-success solde-button" title="Solde actuel de mon compte"><i
+                                class="fas fa-user"></i> Solde : {{ points|number_format(0, '', ' ') }} pb</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Fin recharger -->
+
+
+
+{% endblock %}
+
+
+{% block content %}
+<!-- Debut liste paiements -->
+
+    <h4 class="heading-bar recharge-heading"><span>Obtenir + de points boutique</span></h4>
+    <div class="row step">
+        <div class="col-12 col-md-3">
+            <a href="/shop/recharge">
+                <input class="tab-top btn btn-recharge btn-actif" type="button" name="bt1" value="Pseudo"/>
+            </a>
+        </div>
+        <div class="col-12 col-md-3">
+            <a href="/shop/recharge/step-2">
+                <input class="tab-top btn-recharge btn" type="button" name="bt2" value="Méthode" />
+            </a>
+        </div>
+        <div class="col-12 col-md-3">
+            <a href="/shop/recharge/step-paypal">
+                <input class="tab-top btn-recharge btn" type="button" name="bt3" value="Combien de points ?" />
+            </a>
+        </div>
+        <div class="col-12 col-md-3">
+            <input class="tab-top btn btn-recharge disabled" type="button" name="bt4" value="Validation"  />
+        </div>
+    </div>
+
+
+    <h5 id="somme">Combien de points boutique souhaites-tu ?</h5>
+    {% if (codepromo is not empty) %}
+        <div class="alert alert-success" role="alert" id="success-alert" style="font-size: 19px;">
+            Vous utilisez le code promotionnel {{ codepromo }}. +{{ percentpromo }}% de points boutique sur votre rechargement. Valable 15 minutes.
+        </div>
+    {% endif %}
+    * Les bonus incluent également l'augmentation exponentielle du nombre de points boutique par achat pour les plus grosses offres.<br /><br />
+    <div class="row center shop-offer-col">
+       <div class="col-12 col-md-3">
+           <div class="shop-offer">
+               <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>1500</strike></i>{% else %}{% endif %} {{ cp*1500 }} points boutique</h4>
+               <div class="shop-offer-desc">Équivalent de 5€</div>
+               <a href="/shop/recharge/paypal/0" class="button button-primary small-offer-btn" target="_blank" title="Choisir (1 500 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+           </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="shop-offer">
+                <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>3000</strike></i>{% else %}{% endif %} {{ cp*3000 }} points boutique</h4>
+                <div class="shop-offer-desc">Équivalent de 10€</div>
+                <a href="/shop/recharge/paypal/1" class="button button-primary small-offer-btn" target="_blank" title="Choisir (3 000 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="shop-offer">
+                <div class="top-offer">
+                    TOP
+                </div>
+                <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>5400</strike></i>{% else %}{% endif %} {{ cp*5400 }} points boutique</h4>
+                <div class="shop-offer-bonus">Bonus de 2 250 points</div>
+                <div class="shop-offer-desc">Bonus inclus - Équivalent de 15€</div>
+                <a href="/shop/recharge/paypal/2" class="button button-primary small-offer-btn" target="_blank" title="Choisir (5 400 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="shop-offer">
+                <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>7800</strike></i>{% else %}{% endif %} {{ cp*7800 }} points boutique</h4>
+                <div class="shop-offer-bonus">Bonus de 3 750 points</div>
+                <div class="shop-offer-desc">Bonus inclus - Équivalent de 20€</div>
+                <a href="/shop/recharge/paypal/3" class="button button-primary small-offer-btn" target="_blank" title="Choisir (7 800 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="shop-offer offer-best">
+                <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>11 400</strike></i>{% else %}{% endif %} {{ cp*11140 }} points boutique</h4>
+                <div class="shop-offer-bonus">Bonus de 5 250 points</div>
+                <div class="shop-offer-desc">Bonus inclus - Équivalent de 25€</div>
+                <a href="/shop/recharge/paypal/4" class="button button-primary small-offer-btn" target="_blank" title="Choisir (11 400 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="shop-offer offer-best">
+                <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>18 300</strike></i>{% else %}{% endif %} {{ cp*18300 }} points boutique</h4>
+                <div class="shop-offer-bonus">Bonus de 7 875 points</div>
+                <div class="shop-offer-desc">Bonus inclus - Équivalent de 50€</div>
+                <a href="/shop/recharge/paypal/5" class="button button-primary small-offer-btn" target="_blank" title="Choisir (18 300 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="shop-offer offer-best">
+                <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>34 200</strike></i>{% else %}{% endif %} {{ cp*34200 }} points boutique</h4>
+                <div class="shop-offer-bonus">Bonus de 12 750 points</div>
+                <div class="shop-offer-desc">Bonus inclus - Équivalent de 100€</div>
+                <a href="/shop/recharge/paypal/6" class="button button-primary small-offer-btn" target="_blank" title="Choisir (34 200 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="shop-offer offer-best">
+                <h4 class="shop-offer-title">{% if (cp > 1) %}<i><strike>85 200</strike></i>{% else %}{% endif %} {{ cp*85200 }} points boutique</h4>
+                <div class="shop-offer-bonus">Bonus de 51 250 points</div>
+                <div class="shop-offer-desc">Bonus inclus - Équivalent de 250€</div>
+                <a href="/shop/recharge/paypal/7" class="button button-primary small-offer-btn" target="_blank" title="Choisir (85 000 points boutique)"><i class="fas fa-check"></i>  Obtenir</a>
+            </div>
+        </div>
+    </div>
+<!--    Les paiements par PayPal sont désactivés pour le moment. Nous règlons quelques petits soucis avec le système de rechargement par PayPal sur le nouveau site.
+        Tu pourras recharger ton compte par PayPal très prochainement (dans un jour maximum). Je t'invite cependant à recharger ton compte par SMS, par Appel, par NeoSurf ou par PaySafecard (cartes de recharges trouvables dans un bar-tabac)
+    !-->
+{% endblock %}
+

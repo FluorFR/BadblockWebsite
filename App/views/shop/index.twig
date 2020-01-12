@@ -1,0 +1,371 @@
+{% extends "default.twig" %}
+{% set description = "Obtiens dès maintenant des Grades, des Accès, des Clés ou des Objets sur la boutique de BadBlock pour améliorer drastiquement ton expérience de jeu sur nos serveurs. Résultat garanti." %}
+{% set active_page = "shop" %}
+{% set show_title = false %}
+{% set title = 'shop.title'|trans %}
+{% block cover %}
+    <div class="cover-back">
+        <div class="cover cover-profile">
+            <div class="container">
+                <div class="row d-align">
+                    <div class="col-12 col-md-6">
+                        <div class="recharge-info">
+                            <img src="https://cdn.badblock.fr/boutique/paypal.png" alt="PayPal" title="PayPal">
+                            <img src="https://cdn.badblock.fr/boutique/smsplus.png" alt="SMS" title="SMS">
+                            <img src="https://cdn.badblock.fr/boutique/paysafe.png" title="PaySafecard"
+                                 alt="PaySafecard">
+                            <img src="https://cdn.badblock.fr/boutique/mastercard%20logo.png" title="Carte bancaire"
+                                 alt="Carte bancaire">
+                            <img src="https://cdn.badblock.fr/boutique/cb%20logo.png" title="Carte bancaire"
+                                 alt="Carte bancaire">
+                            <img src="https://cdn.badblock.fr/boutique/visa%20logo.png" title="Visa" alt="Visa">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex justify-content-around flex-wrap">
+                        {% if (isOnline) %}
+                            <a class="button button-success solde-button" title="Solde actuel de mon compte"><i
+                                        class="fas fa-user"></i> Solde : {{ points|number_format(0, '', ' ') }} pb</a>
+                            <a class="button button-primary" href="/shop/recharge" title="Recharger mon compte"><i
+                                        class="far fa-gem"></i> Obtenir + de points boutique</a>
+                        {% else %}
+                            <a class="button button-primary" onclick="login()" title="Se connecter"><i
+                                        class="fas fa-user"></i> Se connecter</a>&nbsp;&nbsp;
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="shop-nav">
+        <div class="container">
+            <ul class="nav justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="grade-tab" data-toggle="tab" href="#grade" role="tab"
+                       aria-controls="grade">Grade</a>
+                </li>
+                {% for key,value in serverlist %}
+                    {% if key != 0 %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="{{ value['server']['name'] }}-tab" data-toggle="tab"
+                               href="#{{ value['server']['name'] }}" role="tab"
+                               aria-controls="{{ value['server']['name'] }}">{{ value['server']['name'] }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+    {% block content %}
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="grade" role="tabpanel" aria-labelledby="grade-tab">
+                {% include "shop/rank.twig" %}
+            </div>
+            {% set i = 0 %}
+            {% for key, value in serverlist %}
+                {% if key != 0 %}
+                    <div class="tab-pane fade" id="{{ value['server']['name'] }}" role="tabpanel"
+                         aria-labelledby="{{ value['server']['name'] }}-tab">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    {% for category in value['cat'] %}
+                                        <div class="col-12">
+                                            <h4 class="heading heading-shop heading-bar">
+                                                <span>{{ category['name'] }}</span></h4>
+                                        </div>
+                                        {% for products in category['items'] %}
+                                            <div class="col-12 col-md-4">
+                                                <div class="shop-package" id="prd-30{{ i }}">
+                                                    <h3>{{ products['name'] | raw }}</h3>
+                                                    <div class="shop-package-content"
+                                                         onclick="openitem('{{ products['_id']['$oid'] }}');">
+                                                        <img src="{{ products['image'] }}"
+                                                             title="Produit {{ products['name'] | raw }}" width="190"
+                                                             height="190" class="img-fluid img-def">
+                                                    </div>
+                                                    <div class="shop-package-desc">{{ products['name'] }}
+                                                        <br> {{ products['description'] | raw | slice(0, 15 ) }} ...
+                                                    </div>
+                                                    <a onclick="confirm('{{ products['_id']['$oid'] }}');">Acheter
+                                                        ({{ products['price'] }})</a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        {% if i == 4 %}
+                                            {% set i = 0 %}
+                                        {% else %}
+                                            {% set i = i + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% set i = i + 1 %}
+            {% endfor %}
+        </div>
+        {% for key, value in serverlist %}
+            {% if key != 0 %}
+                {% for category in value['cat'] %}
+                    {% for products in category['items'] %}
+                        <div class="modal fade" id="modalItem-{{ products['_id']['$oid'] }}" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Produit :
+                                            <strong>{{ products['name'] | raw }}</strong></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="modal-body-img">
+                                            <img src="{{ products['image'] }}"
+                                                 title="Produit {{ products['name'] | raw }}" width="190" height="190"
+                                                 class="img-fluid img-def">
+                                        </div>
+                                        <strong>{{ products['name'] | raw }}</strong>
+                                        <p>{{ products['description'] }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="btn-achat" class="button button-success" onclick="achat('{{ products['_id']['$oid'] }}')">Acheter
+                                        </button>
+                                        <button type="button" class="button button-primary" data-dismiss="modal">
+                                            Fermer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <!-- Shop Modal -->
+        <div class="modal fade" id="shop-error" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Erreur ! !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h1>Désolé mais vous n'avez pas les points boutique nécessaires</h1>
+                        <div class="recharge-button">
+                            <a class="button button-danger" href="{{ path_for('shop.recharge') }}"
+                               title="Recharger mon compte"
+                               class="button"><i class="icon-value-coins icon"></i>Recharger mon compte</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Shop modal -->
+
+
+        <!-- Shop Succes Modal -->
+        <div class="modal fade" id="shop-succes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Erreur ! !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h1>Opération effectuée avec succès.</h1>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Shop Succes modal -->
+        <div class="modal fade" id="shop-500" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Erreur ! !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Une erreur est survenue merci de contacter le support de Badblock.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Shop Error Modal -->
+        <div class="modal fade" id="shop-depend" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Erreur ! !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h3 id="textp"></h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Shop Succes modal -->
+
+        <!-- Link Modal -->
+        <div class="modal fade" id="link-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Vous devez linker votre compte !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Vous devez linker votre compte pour éffectuer cette action.
+                        <a class="button button-danger" href="/link" title="Lier mon compte"><i class="icon-repeat"></i>Linker
+                            son Compte !</a>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login Modal -->
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Vous devez vous connecter !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <a class="button button-info" href="#login-modal"><i class="far fa-lock-alt"></i> Connexion</a>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalconfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Confirmez votre achat</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Souhaitez vous obtenir ce produit ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Refuser</button>
+                        <button type="button" id="btn-confirme" class="button button-success" onclick="">Accepter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="shop200" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Fin de transaction</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Achat éffectué avec succès !
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button button-primary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            function confirm(uuid) {
+                $("#btn-confirme").attr("onclick", "achat('" + uuid + "');");
+                $('#modalconfirm').modal('show');
+            }
+
+            function openitem(uuid) {
+                $('#modalItem-' + uuid).modal('show');
+            }
+
+
+            function achat(idpro) {
+                $('#modalconfirm').modal('hide');
+
+                var prod_id = idpro;
+
+                var request = $.ajax({
+                    url: "/shop/achat/" + prod_id,
+                    method: "POST",
+                    data: {prod_id: prod_id},
+                    dataType: "html"
+                });
+
+                request.done(function (msg) {
+                    $('#shop200').modal('show');
+                });
+
+                request.fail(function (jqXHR, textStatus) {
+                    if (jqXHR.status == 405) {
+                        $('#shop-error').modal('show');
+                    } else if (jqXHR.status == 401) {
+                        $('#login-modal').modal('show');
+                    } else if (jqXHR.status == 405) {
+                        $('#link-modal').modal('show');
+                    } else if (jqXHR.status == 400) {
+                        $("#textp").text(jqXHR.responseText);
+                        $('#shop-depend').modal('show');
+                    } else if (jqXHR.status == 500) {
+                        $('#shop-500').modal('show');
+                    }
+                });
+
+            }
+        </script>
+
+
+    {% endblock %}

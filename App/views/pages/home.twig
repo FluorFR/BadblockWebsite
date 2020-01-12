@@ -1,0 +1,79 @@
+{% extends "default.twig" %}
+{% set active_page = "home" %}
+{% set hide_title = true %}
+{% set h2 = true %}
+{% set title = 'BadBlock – Serveur Minecraft Gratuit Français : MiniJeux, SkyBlock et plus' %}
+{% block cover %}
+<!------Cover------>
+<section>
+    <div class="cover-back">
+        <div class="cover cover-profile">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-9 col-md-8 col-lg-8">
+                        <h3>Serveur minecraft gratuit</h3>
+                        <div class="rsp-button-center">
+                            <a title="Jouer Minecraft" class="button button-success" href="/jouer"><i class="fas fa-gamepad"></i> Jouez dés maintenant !</a>
+                            <a title="Jouer Minecraft" class="button button-primary" href="/stats"><i class="fas fa-gamepad"></i> Statistiques !</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-4 col-lg-4">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!------Cover fin------>
+{% endblock %}
+{% block content %}
+<!-- Articles pined -->
+<div class="row">
+    <div class="col-12 col-md-8">
+        {% if posts_count > 0 %}
+        <div class="mosaic">
+            <article class="card-content" style="height: 151px;">
+                <iframe width="350" src="https://www.youtube.com/embed/6xtpbXjbZZY?rel=0&mute=1&autoplay=1" frameborder="0" allow="width: 350px; height: 100%; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </article>
+            <article class="card-content" style="height: 151px;">
+                <iframe width="350" src="https://www.youtube.com/embed/zSFS7aTbbmg?rel=0" frameborder="0" allow="width: 350px; height: 100%; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </article>
+        </div>
+
+        <div class="mosaic">
+            {% for infos in first_row %}
+            {{ include('macros/card.twig') }}
+            {% endfor %}
+        </div>
+        <div class="mosaic">
+            {% for infos in second_row %}
+            {% set card_special_class = "card-second" %}
+            {{ include('macros/card.twig') }}
+            {% endfor %}
+            <!-- Plus card -->
+            <a class="card-second card-plus no-link" href="{{ path_for('all-posts') }}" title="Accéder au post {{ 'home.cards.more_posts'|trans }}">
+                        <div class="card-plus-text">{{ 'home.cards.more_posts'|trans }}</div>
+                        <i class="icon icon-calcplus"></i>
+                    </a>
+            <!-- Fin plus card-->
+        </div>
+        <!-- Fin seconde ligne de card -->
+        {% endif %}
+        {% if posts_count == 0 %}
+        <div class="no-item-container">
+            <div class="no-item-content">
+                <h4><i class="icon-erroralt"></i></h4>
+                <h4>{{ 'blog.no_posts'|trans }}</h4>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-12 col-md-4">
+        <!-- Main content fin -->
+    {% include 'macros/sidebar.twig' %}
+    <script async defer type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5b9e472db79400bd"></script>
+    
+    </div>
+    </div>
+</div>
+{% endblock %}

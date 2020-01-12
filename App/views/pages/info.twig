@@ -1,0 +1,35 @@
+{% extends "default.twig" %}
+{% set description = "Informations du développement du Site Internet de BadBlock." %}
+{% set active_page = "home" %}
+{% set show_title = false %}
+{% set title = 'Informations' %}
+{% block content %}
+
+<div class="dev-info">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="dev-info-item">
+                <img src="https://cdn.badblock.fr/head/Hooki_/96.png" alt="Tête de Hooki_" title="Tête de Hooki_">
+                <div class="dev-info-title">
+                    Hooki
+                </div>
+                <div class="dev-info-desc">
+                    Designer & Développeur Web
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="dev-info-item">
+                <img src="https://cdn.badblock.fr/head/FluorL/96.png" alt="Tête de FluorL" title="Tête de FluorL">
+                <div class="dev-info-title">
+                    Fluor
+                </div>
+                <div class="dev-info-desc">
+                    WebMaster
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

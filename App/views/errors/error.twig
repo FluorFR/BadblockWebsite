@@ -1,0 +1,6 @@
+{% extends "message.twig" %}
+{% set description = "Une erreur est survenue. Contacte le support de BadBlock par ticket afin d'en savoir plus." %}
+{% set title = title %}
+{% block content %}
+    <p class="lead">{{ error_summary }}</p>
+{% endblock %}

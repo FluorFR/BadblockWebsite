@@ -1,0 +1,21 @@
+{% for comment in comments %}
+    <div class="comments">
+        <div class="comments-content">
+            <div class="comments-author-head">
+                <a href="/profile/{{ comment.username }}" title="Profil de {{ comment.username }}">
+                    <img src="https://cdn.badblock.fr/head/{{ comment.username }}/64.png" class="img-fluid"
+                         alt="Tête de {{ comment.username }}" title="Tête de {{ comment.username }}">
+                </a>
+            </div>
+            <div class="comments-text">
+                <span class="comments-author">{{ comment.username }}</span>
+                <small>{{ timeago(timestampToTime(comment.post_date)) }}</small>
+                <p>{{ comment.message }}</p>
+            </div>
+
+        </div>
+    </div>
+{% endfor %}
+
+
+

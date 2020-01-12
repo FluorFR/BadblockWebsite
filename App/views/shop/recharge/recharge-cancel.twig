@@ -1,0 +1,60 @@
+{% extends "default.twig" %}
+{% set description = "Le rechargement n'a pas pu être effectué pour le moment. Vérifie le code et les détails entrés du compte afin de pouvoir le recharger simplement." %}
+{% set active_page = "shop" %}
+{% set show_title = false %}
+{% set title = 'shop.title'|trans %}
+
+{% block cover %}
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Recharger -->
+
+    <div class="cover-back">
+        <div class="cover cover-profile">
+            <div class="container">
+                <div class="row d-align">
+                    <div class="col-12 col-md-8">
+                        <div class="recharge-info">
+                            <img src="https://cdn.badblock.fr/boutique/paypal.png" alt="PayPal" title="PayPal">
+                            <img src="https://cdn.badblock.fr/boutique/smsplus.png" alt="SMS" title="SMS">
+                            <img src="https://cdn.badblock.fr/boutique/paysafe.png" title="PaySafecard" alt="PaySafecard">
+                            <img src="https://cdn.badblock.fr/boutique/mastercard%20logo.png" title="Carte bancaire"
+                                 alt="Carte bancaire">
+                            <img src="https://cdn.badblock.fr/boutique/cb%20logo.png" title="Carte bancaire"
+                                 alt="Carte bancaire">
+                            <img src="https://cdn.badblock.fr/boutique/visa%20logo.png" title="Visa" alt="Visa">
+                        </div>
+                    </div>
+                    <a class="button button-success solde-button" title="Solde actuel de mon compte"><i
+                                class="fas fa-user"></i> Solde : {{ points|number_format(0, '', ' ') }} pb</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Fin recharger -->
+
+
+
+{% endblock %}
+
+
+{% block content %}
+    <br>
+    <!-- Debut success -->
+    <div class="row footer-success">
+        <div class="four columns">
+        <img src="https://images.badblock.fr/i/multiply.png" class="img-succes">
+        </div>
+        <div class="eight columns">
+            <h3>Impossible de recharger votre compte.</h3><br>
+            <h4>Le code entré est invalide ou le paiement a été annulé.</h4>
+            <h5>Si le paiement a bien eu lieu (code valide ou paiement validé), veuillez nous contacter par support.</h5>
+            <a href="https://badblock.fr/forum/support/open" target="_blank"><button type="submit" class="button button-danger button-danger-recharge"><h5 class="text-success"><i class="fas fa-info"></i></h5>
+        </div>
+    </div>
+{% endblock %}
+
